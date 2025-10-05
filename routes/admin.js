@@ -8,33 +8,42 @@ router.get('/test', async (req, res) => {
   try {
     console.log('Testing admin functionality...');
     console.log('MongoDB connection state:', mongoose.connection.readyState);
+    console.log('MongoDB URI provided:', !!process.env.MONGODB_URI);
+    
+    const response = {
+      success: false,
+      message: 'Admin functionality test',
+      connectionState: mongoose.connection.readyState,
+      mongoUriProvided: !!process.env.MONGODB_URI,
+      environment: process.env.NODE_ENV || 'development',
+      timestamp: new Date().toISOString()
+    };
     
     if (mongoose.connection.readyState !== 1) {
-      return res.json({
-        success: false,
-        message: 'MongoDB not connected',
-        connectionState: mongoose.connection.readyState
-      });
+      response.message = 'MongoDB not connected';
+      response.diagnosis = 'Check your MONGODB_URI environment variable in Vercel settings';
+      return res.json(response);
     }
     
     // Try to count contacts
     const contactCount = await Contact.countDocuments();
     const unreadCount = await Contact.countDocuments({ isRead: false });
     
-    res.json({
-      success: true,
-      message: 'Admin functionality working',
-      connectionState: mongoose.connection.readyState,
-      contactCount: contactCount,
-      unreadCount: unreadCount,
-      databaseName: mongoose.connection.db.databaseName
-    });
+    response.success = true;
+    response.message = 'Admin functionality working';
+    response.contactCount = contactCount;
+    response.unreadCount = unreadCount;
+    response.databaseName = mongoose.connection.db.databaseName;
+    
+    res.json(response);
   } catch (error) {
     console.error('Admin test route error:', error);
     res.json({
       success: false,
       message: 'Admin test failed',
-      error: error.message
+      error: error.message,
+      connectionState: mongoose.connection.readyState,
+      mongoUriProvided: !!process.env.MONGODB_URI
     });
   }
 });
@@ -48,10 +57,13 @@ router.get('/', async (req, res) => {
     // Check if MongoDB is connected
     if (mongoose.connection.readyState !== 1) {
       console.log('MongoDB not connected for admin page');
+      console.log('Connection state:', mongoose.connection.readyState);
+      console.log('MongoDB URI provided:', !!process.env.MONGODB_URI);
+      
       return res.render('admin', {
         title: 'Admin Panel',
         enquiries: [],
-        error: 'Database connection not available. Please check your MongoDB connection.'
+        error: 'Database connection not available. Please check your MongoDB connection. Visit /admin/test for diagnostics.'
       });
     }
     
