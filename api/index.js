@@ -9,22 +9,59 @@ const app = express();
 // MongoDB Connection with serverless-optimized settings
 const MONGODB_URI = process.env.MONGODB_URI;
 
-// Connect to MongoDB only if URI is provided
-if (MONGODB_URI) {
-  mongoose.connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
-    socketTimeoutMS: 45000,
-  }).then(() => {
-    console.log('Connected to MongoDB');
-  }).catch(err => {
-    console.error('MongoDB connection error:', err);
-    // Don't exit the process, continue without database
-  });
-} else {
-  console.log('No MongoDB URI provided, running without database');
+// Global variable to cache the connection
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
 }
+
+async function connectDB() {
+  if (cached.conn) {
+    console.log('Using cached MongoDB connection');
+    return cached.conn;
+  }
+
+  if (!cached.promise) {
+    const opts = {
+      bufferCommands: false,
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      maxPoolSize: 10,
+      retryWrites: true,
+      w: 'majority'
+    };
+
+    console.log('Attempting to connect to MongoDB...');
+    console.log('MongoDB URI provided:', !!MONGODB_URI);
+    
+    if (!MONGODB_URI) {
+      console.log('No MongoDB URI provided, running without database');
+      return null;
+    }
+
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
+      console.log('Successfully connected to MongoDB');
+      return mongoose;
+    }).catch((err) => {
+      console.error('MongoDB connection error:', err);
+      cached.promise = null;
+      return null;
+    });
+  }
+
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+
+  return cached.conn;
+}
+
+// Connect to MongoDB
+connectDB();
 
 // Handlebars setup
 app.engine('hbs', exphbs.engine({
