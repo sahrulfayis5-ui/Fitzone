@@ -20,6 +20,7 @@ if (MONGODB_URI) {
     console.log('Connected to MongoDB');
   }).catch(err => {
     console.error('MongoDB connection error:', err);
+    // Don't exit the process, continue without database
   });
 } else {
   console.log('No MongoDB URI provided, running without database');
