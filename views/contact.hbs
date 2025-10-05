@@ -1,0 +1,67 @@
+<section class="contact-section">
+  <div class="container">
+    <h1>Contact Us</h1>
+    <p>Get in touch with us for any questions or inquiries about our fitness programs and membership options.</p>
+    
+    <!-- Contact Form -->
+    <div class="contact-form-container">
+      <h2>Send us a Message</h2>
+      {{#if success}}
+        <div class="success-message">{{success}}</div>
+      {{/if}}
+      {{#if error}}
+        <div class="error-message">{{error}}</div>
+      {{/if}}
+      
+      <form action="/contact" method="POST" class="contact-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required placeholder="(555) 123-4567">
+        </div>
+        
+        <div class="form-group">
+          <label for="address">Address</label>
+          <textarea id="address" name="address" rows="3" required placeholder="Your full address"></textarea>
+        </div>
+        
+        <div class="form-group">
+          <label for="message">Message (Optional)</label>
+          <textarea id="message" name="message" rows="4" placeholder="Tell us more about your inquiry..."></textarea>
+        </div>
+        
+        <button type="submit" class="btn-primary-large">Send Message</button>
+      </form>
+    </div>
+    
+    <!-- Contact Info -->
+    <div class="contact-info">
+      <h2>Our Information</h2>
+      <div class="contact-cards">
+        <div class="contact-card">
+          <h3>📍 Address</h3>
+          <p>123 Fitness Street<br>Health City, HC 12345</p>
+        </div>
+        
+        <div class="contact-card">
+          <h3>📞 Phone</h3>
+          <p>(555) 123-4567</p>
+        </div>
+        
+        <div class="contact-card">
+          <h3>✉️ Email</h3>
+          <p>info@fitzone.com</p>
+        </div>
+        
+        <div class="contact-card">
+          <h3>🕒 Hours</h3>
+          <p>24/7 Access<br>Staff: 6 AM - 10 PM</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

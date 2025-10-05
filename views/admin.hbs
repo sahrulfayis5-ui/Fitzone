@@ -1,0 +1,57 @@
+<section class="admin-section">
+  <div class="container">
+    <h1>Admin Panel - Contact Enquiries</h1>
+    <p>Manage all contact form submissions</p>
+    
+    {{#if error}}
+      <div class="error-message">{{error}}</div>
+    {{/if}}
+    
+    {{#if enquiries.length}}
+      <div class="enquiries-list">
+        <h2>All Enquiries ({{enquiries.length}})</h2>
+        
+        {{#each enquiries}}
+        <div class="enquiry-card {{#unless isRead}}unread{{/unless}}">
+          <div class="enquiry-header">
+            <div class="enquiry-info">
+              <h3>{{email}}</h3>
+              <span class="submission-date">{{submittedAt}}</span>
+              {{#unless isRead}}<span class="unread-badge">NEW</span>{{/unless}}
+            </div>
+            <div class="enquiry-actions">
+              {{#unless isRead}}
+              <form action="/admin/mark-read/{{_id}}" method="POST" style="display: inline;">
+                <button type="submit" class="btn-small btn-mark-read">Mark as Read</button>
+              </form>
+              {{/unless}}
+              <form action="/admin/delete/{{_id}}" method="POST" style="display: inline;">
+                <button type="submit" class="btn-small btn-delete" onclick="return confirm('Are you sure you want to delete this enquiry?')">Delete</button>
+              </form>
+            </div>
+          </div>
+          
+          <div class="enquiry-details">
+            <div class="detail-row">
+              <strong>Phone:</strong> {{phone}}
+            </div>
+            <div class="detail-row">
+              <strong>Address:</strong> {{address}}
+            </div>
+            {{#if message}}
+            <div class="detail-row">
+              <strong>Message:</strong> {{message}}
+            </div>
+            {{/if}}
+          </div>
+        </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="no-enquiries">
+        <h2>No enquiries yet</h2>
+        <p>Contact form submissions will appear here.</p>
+      </div>
+    {{/if}}
+  </div>
+</section>

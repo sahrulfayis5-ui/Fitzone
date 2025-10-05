@@ -1,0 +1,64 @@
+<!-- Members Section -->
+<section class="members-section">
+  <div class="container">
+    <h1>Join Our Community</h1>
+    <p>Become a member of FitZone Gym and start your fitness journey today with our premium facilities and expert trainers.</p>
+    
+    <!-- Member Registration Form -->
+    <div class="member-form">
+      <h2>Register as a Member</h2>
+      {{#if success}}
+        <div class="success-message">{{success}}</div>
+      {{/if}}
+      {{#if error}}
+        <div class="error-message">{{error}}</div>
+      {{/if}}
+      
+      <form action="/members" method="POST">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="John Doe">
+        </div>
+        
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="john@example.com">
+        </div>
+        
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" required placeholder="(555) 123-4567">
+        </div>
+        
+        <div class="form-group">
+          <label for="membershipType">Membership Type</label>
+          <select id="membershipType" name="membershipType" required>
+            <option value="">Select Membership Plan</option>
+            <option value="basic">💪 Basic - $29/month</option>
+            <option value="premium">🔥 Premium - $49/month</option>
+            <option value="vip">⭐ VIP - $79/month</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="btn-primary-large">Join FitZone</button>
+      </form>
+    </div>
+    
+    <!-- Existing Members -->
+    {{#if members}}
+    <div class="members-list">
+      <h2>Our Members</h2>
+      <div class="members-grid">
+        {{#each members}}
+        <div class="member-card">
+          <h3>{{name}}</h3>
+          <p>📧 {{email}}</p>
+          <p>💳 {{membershipType}}</p>
+          <small>📅 Joined: {{joinDate}}</small>
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/if}}
+  </div>
+</section>
