@@ -10,6 +10,11 @@ router.get('/', (req, res) => {
   });
 });
 
+// Join page route (GET) - redirects to members page
+router.get('/join', (req, res) => {
+  res.redirect('/members');
+});
+
 // Contact page route (GET)
 router.get('/contact', (req, res) => {
   res.render('contact', { 
@@ -49,4 +54,7 @@ router.post('/contact', async (req, res) => {
 });
 
 module.exports = router;
+
+
+
 
