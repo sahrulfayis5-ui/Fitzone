@@ -7,6 +7,10 @@
       <div class="error-message">{{error}}</div>
     {{/if}}
     
+    {{#if success}}
+      <div class="success-message">{{success}}</div>
+    {{/if}}
+    
     {{#if enquiries.length}}
       <div class="enquiries-list">
         <h2>All Enquiries ({{enquiries.length}})</h2>
